@@ -111,7 +111,8 @@ export interface SocketIoMiddlewareConfig {
     httpKeepAlive?: boolean
     /**
      * Setting up the axios library that is internally communicating with the server
+     * @see https://github.com/axios/axios#request-config
      */
-    axiosRequestConfig: AxiosRequestConfig
+    axiosRequestConfig?: AxiosRequestConfig
   }
 }
