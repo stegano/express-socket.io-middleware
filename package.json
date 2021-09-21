@@ -1,6 +1,6 @@
 {
   "name": "express-socket.io-middleware",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This middleware allows you to easily convert your existing HTTP REST APIs to websockets.",
   "main": "dist/index.js",
   "scripts": {
