@@ -35,7 +35,7 @@ const io = new Server(server, {
 });
 
 app
-  .use(socketIoMiddleware(server, 'http://localhost:3000', 'secret!'))
+  .use(socketIoMiddleware(io, 'http://localhost:3000', 'secret!'))
   .get('/test', (_, res) => {
     res.send({message: 'Hello World'})
   });
