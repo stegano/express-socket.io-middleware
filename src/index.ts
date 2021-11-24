@@ -1,7 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import {
-  NextFunction, Request, RequestHandler, Response,
-} from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { Server } from 'socket.io';
 import Axios, { AxiosError } from 'axios';
 import http from 'http';
@@ -23,10 +21,11 @@ const socketIoMiddleware = (
   socketIoServer: Server,
   apiServerUrl: string,
   jwtTokenSecret: string,
-  config: SocketIoMiddlewareConfig = {
-  },
+  config: SocketIoMiddlewareConfig = {}
 ): RequestHandler => {
-  const httpAgent = new http.Agent({ keepAlive: config.__advanced__?.httpKeepAlive || true });
+  const httpAgent = new http.Agent({
+    keepAlive: config.__advanced__?.httpKeepAlive || true,
+  });
   const axios = Axios.create(config.__advanced__?.axiosRequestConfig);
 
   const eventNames = {
@@ -58,9 +57,13 @@ const socketIoMiddleware = (
          * Regardless of the Axios response result,
          * the response is sent to the web socket when the server response is processed.
          */
-        const socketAuthToken = jwt.sign({ socketId: socket.id }, jwtTokenSecret, {
-          expiresIn: '30d',
-        });
+        const socketAuthToken = jwt.sign(
+          { socketId: socket.id },
+          jwtTokenSecret,
+          {
+            expiresIn: '30d',
+          }
+        );
         await axios({
           method,
           data,
@@ -100,7 +103,7 @@ const socketIoMiddleware = (
             eventNames.response,
             config.transformResponsePayload
               ? config.transformResponsePayload(responsePayload)
-              : responsePayload,
+              : responsePayload
           );
         } else {
           const message = config.unexpectedErrorMessage || error.message;
@@ -118,18 +121,14 @@ const socketIoMiddleware = (
             eventNames.response,
             config.transformResponsePayload
               ? config.transformResponsePayload(responsePayload)
-              : responsePayload,
+              : responsePayload
           );
         }
       }
     });
   });
 
-  return async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
     /**
      * The `socketId` to which to forward the response
@@ -138,10 +137,10 @@ const socketIoMiddleware = (
 
     if (authorization) {
       const [, token] = authorization.split(' ');
-      requestSocketId = await new Promise(
-        (resolve) => jwt.verify(token, jwtTokenSecret, (_err, decoded) => {
+      requestSocketId = await new Promise((resolve) =>
+        jwt.verify(token, jwtTokenSecret, (_err, decoded) => {
           resolve(decoded?.socketId);
-        }),
+        })
       );
     }
 
@@ -170,7 +169,9 @@ const socketIoMiddleware = (
             params,
           } = req;
           const headers = res.getHeaders();
-          const isJsonData = headers['content-type']?.toString()?.startsWith('application/json');
+          const isJsonData = headers['content-type']
+            ?.toString()
+            ?.startsWith('application/json');
           const data = isJsonData ? JSON.parse(rawData) : rawData;
           const responsePayload = {
             response: {
@@ -193,7 +194,7 @@ const socketIoMiddleware = (
               eventNames.response,
               config.transformResponsePayload
                 ? config.transformResponsePayload(responsePayload)
-                : responsePayload,
+                : responsePayload
             );
         }
         resSend.call(res, rawData);
