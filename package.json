@@ -1,7 +1,7 @@
 {
   "name": "express-socket.io-middleware",
   "version": "0.0.3",
-  "description": "This middleware allows you to easily convert your existing HTTP REST APIs to websockets.",
+  "description": "This middleware allows you to use the existing HTTP REST API as a WebSocket.",
   "main": "dist/index.js",
   "scripts": {
     "start": "pm2-runtime ./src/index.ts --watch",

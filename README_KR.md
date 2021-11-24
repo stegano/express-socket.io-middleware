@@ -1,5 +1,5 @@
 # Express Socket.io Middleware
-> This middleware allows you to use the existing HTTP REST API as a WebSocket.
+> 이 미들웨어를 사용하면 기존의 HTTP REST API를 WebSocket으로 사용할 수 있습니다.
 
 ## Installation
 
@@ -16,7 +16,8 @@ git clone https://github.com/stegano/express-socket.io-middleware.git
 ```
 
 ## Example
-This middleware allows you to process all rest api requests and responses implemented as websockets.
+이 미들웨어를 사용하여 구현된 모든 REST API 요청과 응답을 WebSocket으로 처리할 수 있습니다.
+
 ### Server
 ```ts
 ...
@@ -37,17 +38,18 @@ server.listen(3000);
 ```
 
 ### Clients
-* You can change the event name in configuration. Please check the [Configuration](#configuration) section.
+* 이벤트 이름은 설정에서 변경하실수 있습니다. [설정](#configuration) 섹션을 확인해 주세요.
+
 #### Client With Socket.io
-> Request through websocket and receive a response
+> WebSocket을 통해 요청하고 응답을 수신
 ```ts
-// 1) Create and connect socket object
+// 1) 소켓 객체를 생성하고 연결
 const socket = io({
       path: '/ws',
       transports: ['websocket']
     });
 
-// 2) Send request using WebSocket
+// 2) 웹 소켓을 사용하여 요청 전송
 socket.emit('request', {
   pathanme: '/test',
   method: 'GET',
@@ -55,24 +57,24 @@ socket.emit('request', {
   params: {}
 });
 
-// 3) Receive response using WebSocket
+// 3) 웹 소켓을 사용하여 응답 수신
 socket.on('response', (data) => {
   console.log(data); // `{ request: {...}, response: { ..., data: 'Hello World' }} }`
 });
 ```
 
-#### Client With HTTP API and Socket.io
-> Request using REST API and receive response using WebSocket
+#### Client With REST API and Socket.io
+> REST API을 이용하여 요청하고 WebSocket을 이용하여 응답을 수신
 ```ts
-// 1) Create and connect socket object
+// 1) 소켓 객체를 생성하고 연결
 const socket = io({
       path: '/ws',
       transports: ['websocket']
     });
 
-// 2) Receive auth token via WebSocket
+// 2) 인증 토큰을 수신
 socket.on('token', ({token}) => {
-  // 3) Send REST API request with `authentication` header
+  // 3) `authentication` 헤더를 포함하여 REST API 요청
   axios.get('/test', {
     headers: {
       authorization: `Bearer ${token}`
@@ -80,9 +82,8 @@ socket.on('token', ({token}) => {
   })
 });
 
-
+// 4) REST API 응답을 웹 소켓으로 수신
 socket.on('response', (data) => {
-  // 4) Receive REST API response as WebSocket
   console.log(data); // `{ request: {...}, response: { ..., data: 'Hello World' }} }`
 });
 ```
@@ -90,39 +91,37 @@ socket.on('response', (data) => {
 ## Configuration
 ```ts
   /**
-   * Send an error message to the socket
-   * When an unexpected error occurs during internal processing of socketIoMiddleware.
+   * `socketIoMiddleware`의 내부 처리 중 예기치 않은 오류가 발생하면 소켓에 오류 메시지를 보냅니다
    */
   unexpectedErrorMessage?: string
   /**
-   * This setting can transform the response payload data to be sent to the socket.
+   * 소켓으로 보낼 응답 페이로드 데이터를 변환할 수 있습니다.
    */
   transformResponsePayload?: (data: ResponsePayload) => any
   /**
-   * This setting can change the socket event name.
+   * 소켓 이벤트 이름을 변경할 수 있습니다.
    */
   eventNames?: {
     /**
-     * When a socket is connected, it sends a JWT. This token contains authentication information
-     * about the socket to connect to when making an API request.
+     * 소켓이 연결되면 JWT 토큰을 전송합니다. 이 토큰에는 API를 요청할 때 연결할 소켓에 대한 인증 정보가 포함되어 있습니다.
      */
     token?: string
     /**
-     * The name of the event to request with the websocket.
+     * 웹 소켓에서 사용할 요청 이벤트 이름입니다.
      */
     request?: string
     /**
-     * The name of the event that will receive a response to information requested by the websocket.
+     * 웹 소켓에서 사용할 응답 이벤트 이름입니다.
      */
     response?: string
   }
   __advanced__?: {
     /**
-     * Whether keepalive is enabled when communicating with the server internally
+     * 서버와 내부적으로 통신할 때 keepalive 사용 여부 입니다.
      */
     httpKeepAlive?: boolean
     /**
-     * Setting up the axios library that is internally communicating with the server
+     * 서버와 내부적으로 통신 중인 Axios 라이브러리 설정 값 입니다.
      * @see https://github.com/axios/axios#request-config
      */
     axiosRequestConfig?: AxiosRequestConfig
@@ -130,4 +129,4 @@ socket.on('response', (data) => {
 ```
 
 ## Internal Implementation
-This middleware internally sends an HTTP request to the web server and sends the received response value to the connected web socket.
+이 미들웨어는 내부적으로 HTTP 요청을 웹 서버로 보내고 수신된 응답 값을 연결된 웹 소켓으로 보냅니다.
