@@ -1,6 +1,6 @@
 {
   "name": "express-socket.io-middleware",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "This middleware allows you to use the existing HTTP REST API as a WebSocket.",
   "main": "dist/index.js",
   "scripts": {
